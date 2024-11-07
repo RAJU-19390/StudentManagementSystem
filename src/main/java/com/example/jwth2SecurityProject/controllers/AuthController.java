@@ -21,6 +21,7 @@ public class AuthController {
     public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
         try {
             userService.register(request);
+            LoggerUtil.getLogger().info(request.getUsername() + " created account successfully.");
             return ResponseEntity.ok("User registered successfully");
         }catch (Exception e) {
             LoggerUtil.getLogger().error(e);
@@ -31,7 +32,13 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         try {
-            return ResponseEntity.ok(userService.login(request));
+            LoginResponse response=userService.login((request));
+            if(response!=null) {
+                LoggerUtil.getLogger().info(request.getUsername() + " login done!.");
+                return ResponseEntity.ok(userService.login(request));
+            }
+            LoggerUtil.getLogger().warn(request.getUsername() + " login failed.Try Again!");
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
         }catch (Exception e) {
             LoggerUtil.getLogger().error(e);
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
