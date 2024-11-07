@@ -35,7 +35,7 @@ public class AuthController {
             LoginResponse response=userService.login((request));
             if(response!=null) {
                 LoggerUtil.getLogger().info(request.getUsername() + " login done!.");
-                return ResponseEntity.ok(userService.login(request));
+                return ResponseEntity.ok(response);
             }
             LoggerUtil.getLogger().warn(request.getUsername() + " login failed.Try Again!");
             return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
